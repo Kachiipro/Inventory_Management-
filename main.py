@@ -1,5 +1,5 @@
-from store_inventory import Store
 from product import Products
+from store_inventory import Store
 
 
 def display_menu():
@@ -8,7 +8,8 @@ def display_menu():
     print("2. View products")
     print("3. Update product details and stock quantities.")
     print("4. Search and sort products")
-    print("5. Exit")
+    print("5. Generate low-stock alerts")
+    print("6. Exit")
     print()
 
 
@@ -57,7 +58,28 @@ def main():
                     inventory.update_price(product_name, price)
                 case _:
                     print("Invalid column")
+        elif command == "4":
+            print("1. sort by name")
+            print("2. sort by category")
+            print("3. sort by stock quantity")
+            sort = input("enter option 1-5: ")
+            match sort:
+                case "1":
+                    sort_name = input("enter name to search: ")
+                    inventory.search_name(sort_name)
+                case "2":
+                    category = input("enter category: ")
+                    inventory.sort_category(category)
+                case "3":
+                    quantity = int(input("Enter Quantity: "))
+                    print (f"products less or equal to {quantity} in Store")
+                    inventory.sort_quantity(quantity)
+        elif command == "5":
+            inventory.low_stocks()
 
+        elif command == "6":
+            inventory.close()
+            break
 
 if __name__ == "__main__":
     main()
