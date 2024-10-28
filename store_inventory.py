@@ -3,6 +3,7 @@ from dbconn import Database
 
 
 class Store:
+    low_stock = 10
     def __init__(self):
         self.db = Database()
 
@@ -40,3 +41,45 @@ class Store:
         query = "UPDATE My_Inventory SET product_price = %s WHERE product_name = %s "
         self.db.execute_q(query, (price, product_n))
         print("update succesfull")
+
+    def search_name(self, sort_name):
+        query = "SELECT * FROM My_Inventory WHERE product_name = %s"
+        products = self.db.fetch_q(query, (sort_name,))
+        if products:
+            for p in products:
+                print(f"ID: {p[0]}, Name:{p[1]}, Quantity:{p[3]}, Price: ${p[4]:.2f}")
+        else:
+            print(f"{sort_name} not in store")
+
+    def sort_category(self, category):
+        query = "SELECT * FROM My_Inventory WHERE product_category = %s"
+        products = self.db.fetch_q(query, (category,))
+        if products:
+            for p in products:
+                print (f"{category} in Store")
+                print(f"ID: {p[0]}, Name:{p[1]},Quantity:{p[2]}, Price: ${p[3]:.2f}")
+        else:
+            print(f"{category} not in store")
+
+    def sort_quantity(self, quantity):
+        query = "SELECT * FROM My_Inventory WHERE product_quantity <= %s "
+        products = self.db.fetch_q(query, (quantity,))
+        if products:
+            for p in products:
+                
+                print(f"ID: {p[0]}, Name:{p[1]},Quantity:{p[3]}, Price: ${p[4]:.2f}")
+        else:
+            print(f"{quantity} not in store")
+
+    def low_stocks(self,):
+        query = "SELECT * FROM My_Inventory WHERE product_quantity < %s "
+        products = self.db.fetch_q(query, (self.low_stock,))
+        if products:
+            for p in products:
+                
+                print(f"ID: {p[0]}, Name:{p[1]},Quantity:{p[3]}, Price: ${p[4]:.2f}")
+        else:
+            print("All products are well stocked")
+    def close(self):
+        self.db.close_conn()
+        print("store closed")
